@@ -36,6 +36,8 @@ docker run -it \
 -e POSTGRES_DB="css" \
 -v /home/tawfik/Softy/cityStreetSmart/docker_postgresql/css_postgres_data:/var/lib/postgresql/data \
 -p 5432:5432 \
+--network=pg-network \
+--name pg-database \
 postgres:13
 
 
@@ -65,7 +67,76 @@ pip install sqlalchemy
 
 
 ###########
+# PGAdmin
+
+# Create network for both postgres and pgadmin
+docker network create pg-network
+
+docker run -it \
+    -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+    -e PGADMIN_DEFAULT_PASSWORD="root" \
+    -p 8080:80 \
+    --network=pg-network \
+    --name pgadmin \
+    dpage/pgadmin4 
+    
+# http://localhost:8080
+# then create a server with the localhost: pg-database as the container name
 
 
+####
+Containerizing the ingestion
 
+#1. Conver the notebook to python script
 
+#### To Run the file #### https://github.com/TawfikYasser/city-street-smart/blob/main/data_ingestion.py
+URL="https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2021-01.csv "
+python3 data_ingestion.py \
+    --user=root \
+    --password=root \
+    --host=localhost \
+    --port=5432 \
+    --db_name=css \
+    --table_name=yellow_taxi_trips \
+    --url=${URL}
+    
+    
+# Now send to docker
+# to build the docker for ingestion
+# Dockerfile: https://github.com/TawfikYasser/city-street-smart/blob/main/Dockerfile
+# go to the build context
+docker build -t taxi_trips_data:v001 .
+
+# To run the ingestion using docker
+URL="https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2021-01.csv "
+docker run -it \
+    --network=pg-network 
+    taxi_trips_data \
+    --user=root \
+    --password=root \
+    --host=localhost \
+    --port=5432 \
+    --db_name=css \
+    --table_name=yellow_taxi_trips \
+    --url=${URL}
+    
+
+# To prevent downloading the file if found
+python3 -m http.server
+# open http://localhost:8000, get the file link
+# ip address 172.17.0.1
+
+# To run the ingestion using docker
+URL="http://172.17.0.1:8000/yellow_tripdata_2021-01.csv"
+docker run -it \
+    --network=pg-network \
+    taxi_trips_data:v001 \
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --db_name=css \
+    --table_name=yellow_taxi_trips \
+    --url=${URL}
+
+# Docker compose
