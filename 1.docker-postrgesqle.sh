@@ -139,4 +139,25 @@ docker run -it \
     --table_name=yellow_taxi_trips \
     --url=${URL}
 
-# Docker compose
+# Docker compose (postgresql and pgadmin in docker)
+# yml
+services:
+  pgdatabase:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=css
+    volumes:
+      - "./css_postgres_data:/var/lib/postgresql/data:rw"
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "8088:80"
+docker-compose up
+
