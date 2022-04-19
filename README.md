@@ -5,7 +5,7 @@ Map to [DEZC](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/ma
 
 ## Project Details and Map
 
-### Week 1
+### Week 1 (All files will be pushed to github after the week)
 - Finished:
 1.2.1, 1.2.2, 1.2.3, 1.2.4, 1.2.5, 1.2.6
 
