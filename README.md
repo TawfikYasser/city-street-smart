@@ -1,6 +1,8 @@
 # city-street-smart [CSS-P.1]
 City Street Smart [Big Data Project]
 
+Map to [DEZC](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/week_1_basics_n_setup)
+
 ## Project Details and Map
 
 ### Week 1
