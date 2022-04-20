@@ -21,5 +21,9 @@ Map to [DEZC](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/ma
   - Docker
   - Python
   - The Dataset from: https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page
- 
+
+- Week-1 Work
+  - Getting the data using python script (or on juypter notebook) to pgadmin and postgresql, deployed the script to docker.
+  - 
+
 - - -
